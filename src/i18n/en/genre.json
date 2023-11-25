@@ -1,0 +1,9 @@
+{
+  "requiredGenreTranslationKey": "Please provide literary genre",
+  "genreCreated": "Literary genre created",
+  "genreAlreadyExists": "This literary genre has already been added",
+  "genreNotFound": "Genre not found",
+  "genreUpdated": "Genre updated",
+  "genreRemoved": "Genre removed",
+  "genresNotFound": "Genres not found"
+}

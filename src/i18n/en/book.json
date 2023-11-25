@@ -1,0 +1,26 @@
+{
+  "bookCreated": "Book has been added to your library",
+  "bookUpdated": "Information about the book has been updated",
+  "bookNotFound": "Book not found",
+  "bookDeleted": "Book has been removed from the library",
+  "booksNotFound": "Books not found for this user",
+  "title": {
+    "requiredTitle": "Title is required"
+  },
+  "description": {
+    "requiredDescription": "Description is required",
+    "min": "Description should be at least 10 characters long"
+  },
+  "author": {
+    "requiredAuthor": "Author is required"
+  },
+  "rating": {
+    "requiredRating": "Rating is required"
+  },
+  "genre": {
+    "requiredGenre": "Please, provide at least one literary genre"
+  },
+  "numberOfPages": {
+    "requiredNumberOfPages": "Please provide number of pages"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "common": {
+    "badObject": "Bad object structure",
+    "requiredField": "Field: {field} is required",
+    "badFormat": "Incorrect format",
+    "minLength": "Minimum {length} characters",
+    "maxLength": "Maximum {length} characters",
+    "idRequired": "Field: id is required"
+  },
+  "firstName": {
+    "requiredFirstName": "First name is required",
+    "invalidFirstName": "Invalid first name"
+  },
+  "lastName": {
+    "requiredLastName": "Last name is required",
+    "invalidLastName": "Invalid last name"
+  },
+  "email": {
+    "invalidEmail": "Invalid email",
+    "requiredEmail": "Email is required"
+  },
+  "password": {
+    "invalidPassword": "Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character",
+    "requiredPassword": "Password is required"
+  },
+  "confirmPassword": {
+    "invalidConfirmPassword": "Passwords must match"
+  },
+  "phoneNumber": {
+    "requiredPhoneNumber": "Phone number is required",
+    "invalidNumber": "Invalid phone number"
+  },
+  "address": {
+    "requiredCity": "Required city",
+    "requiredAddress": "Required address",
+    "requiredStreet": "Required street",
+    "requiredPostalCode": "Required postal code",
+    "invalidPostalCode": "Invalid postal code"
+  },
+  "lendBook": {
+    "invalidLendBook": "Date has the wrong format",
+    "requiredLendBookFrom": "Borrow date cannot be empty",
+    "requiredLendBookTo": "Return date cannot be empty",
+    "requiredLendStatus": "Lend status is required"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "requiredGenreTranslationKey": "Proszę podać nazwę gatunku literackiego",
+  "genreCreated": "Dodano gatunek literacki",
+  "genreAlreadyExists": "Ten gatunek literacki już został dodany",
+  "genreNotFound": "Nie znaleziono gatunku literackiego",
+  "genreUpdated": "Zaktualizowano gatunek literacki",
+  "genreRemoved": "Pomyślnie usunięto gatunek literacki"
+}

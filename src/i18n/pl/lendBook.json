@@ -1,0 +1,6 @@
+{
+  "createLendBook": "Książka została wypożyczona",
+  "updatedLendBook": "Zaktualizowano informacje o wypożyczeniu",
+  "noLendBooks": "Brak informacji o wypożyczonych książkach",
+  "bookAlreadyLended": "Ta książka została już wypożyczona"
+}

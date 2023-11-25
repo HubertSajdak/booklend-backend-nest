@@ -1,0 +1,26 @@
+{
+  "bookCreated": "Książka została dodana do twojej biblioteki",
+  "bookUpdated": "Informacje o książce zostały zaktualizowane",
+  "bookNotFound": "Nie znaleziono książki",
+  "bookDeleted": "Pomyślnie usunięto ksiażkę z biblioteki",
+  "booksNotFound": "Nie znaleziono książek dla tego użytkownika",
+  "title": {
+    "requiredTitle": "Tytuł jest wymagany"
+  },
+  "description": {
+    "requiredDescription": "Opis jest wymagany",
+    "min": "Opis powinien zawierać co najmniej 10 znaków"
+  },
+  "author": {
+    "requiredAuthor": "Autor jest wymagany"
+  },
+  "rating": {
+    "requiredRating": "Ocena jest wymagana"
+  },
+  "genre": {
+    "requiredGenre": "Proszę podać co najmniej jeden gatunek literacki"
+  },
+  "numberOfPages": {
+    "requiredNumberOfPages": "Proszę podać ilość stron"
+  }
+}

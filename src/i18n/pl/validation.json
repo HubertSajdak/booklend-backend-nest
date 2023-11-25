@@ -1,0 +1,49 @@
+{
+  "common": {
+    "badObject": "Zła struktura obiektu",
+    "requiredField": "Pole: {field}, jest wymagane",
+    "badFormat": "Nieprawidłowy format",
+    "minLength": "Minimum {length} znaków",
+    "maxLength": "Maksimum {length} znaków",
+    "idRequired": "Pole id jest wymagane"
+  },
+  "firstName": {
+    "requiredFirstName": "Imię jest wymagane",
+    "invalidFirstName": "Nieprawidłowe imię"
+  },
+  "lastName": {
+    "requiredLastName": "Nazwisko jest wymagane",
+    "invalidLastName": "Nieprawidłowe nazwisko"
+  },
+  "email": {
+    "invalidEmail": "Nieprawidłowy email",
+    "requiredEmail": "Email jest wymagany"
+  },
+  "password": {
+    "invalidPassword": "Minimum 8 znaków, jedna wielka litera, jedna cyfra oraz znak specjalny",
+    "requiredPassword": "Hasło jest wymagane"
+  },
+  "confirmPassword": {
+    "invalidConfirmPassword": "Hasła muszą być takie same"
+  },
+  "photo": {
+    "isStringPhoto": "Zły format zdjęcia"
+  },
+  "phoneNumber": {
+    "requiredPhoneNumber": "Numer telefonu jest wymagany",
+    "invalidNumber": "Nieprawidłowy numer telefonu"
+  },
+  "address": {
+    "requiredAddress": "Required address",
+    "requiredStreet": "Nazwa ulicy jest wymagana",
+    "requiredCity": "Nazwa miejscowości jest wymagana",
+    "requiredPostalCode": "Kod pocztowy jest wymagany",
+    "invalidPostalCode": "Nieprawidłowy kod pocztowy"
+  },
+  "lendBook": {
+    "invalidLendBook": "Zły format daty",
+    "requiredLendBookFrom": "Data wypożyczenia nie może być pusta",
+    "requiredLendBookTo": "Data oddania nie może być pusta",
+    "requiredLendStatus": "Status wypożyczenia jest wymagany"
+  }
+}

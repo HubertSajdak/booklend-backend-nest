@@ -1,0 +1,10 @@
+{
+  "test": "test",
+  "emailExists": "This email already exists",
+  "adminCreated": "Admin created",
+  "emailNotFound": "This email doesn't exist",
+  "invalidCredentials": "Invalid email or password",
+  "welcome": "Welcome",
+  "infoUpdated": "Information updated",
+  "passwordUpdated": "Password updated"
+}

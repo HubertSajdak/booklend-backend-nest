@@ -1,0 +1,6 @@
+{
+  "createBorrowedBook": "A book has been lended",
+  "updatedBorrowedBook": "Updated information on book lending",
+  "noLendBooks": "No information about lended books",
+  "bookAlreadyLended": "This book is already lended"
+}
