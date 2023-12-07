@@ -2,7 +2,6 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
-  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
@@ -111,7 +110,6 @@ export class BookService {
   ): Promise<{ data: Book[]; totalItems: number; numOfPages: number }> {
     const { userId } = req.user;
     const { search, sortBy, sortDirection, pageSize, currentPage } = query;
-    Logger.log(search, sortBy, sortDirection, pageSize, currentPage);
     const page = Number(currentPage) || 1;
     const limit = Number(pageSize) || 10;
     const skip = (page - 1) * limit;

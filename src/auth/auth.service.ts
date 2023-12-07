@@ -81,6 +81,7 @@ export class AuthService {
         errors: [i18n.t('admin.invalidCredentials')],
       });
     }
+    Logger.log(process.env.JWT_LIFETIME);
     const accessToken = this.jwtService.sign(
       {
         userId: existingAdmin._id,
