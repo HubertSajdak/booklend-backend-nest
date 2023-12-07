@@ -87,26 +87,54 @@ export class LendBookService {
     await this.lendBookModel.updateOne({ _id: id }, { ...input });
     return { message: i18n.t('lendBook.updatedLendBook') };
   }
-  async getAllLendedBooks(req, @I18n() i18n: I18nContext): Promise<LendBook[]> {
+  async getAllLendedBooks(
+    query,
+    req,
+    @I18n() i18n: I18nContext,
+  ): Promise<{ data: LendBook[]; totalItems: number; numOfPages: number }> {
     const { userId } = req.user;
-    const existingLendBooks = await this.lendBookModel.find({
+    const { sortBy, sortDirection, pageSize, currentPage } = query;
+    const page = Number(currentPage) || 1;
+    const limit = Number(pageSize) || 10;
+    const skip = (page - 1) * limit;
+    const isAsc = sortDirection === 'asc' ? '' : '-';
+    const existingLendBooks = await this.lendBookModel
+      .find({
+        adminId: userId,
+      })
+      .sort(isAsc + `${sortBy}`)
+      .skip(skip)
+      .limit(limit);
+    if (!existingLendBooks) {
+      throw new NotFoundException({
+        statusCode: 400,
+        message: 'Bad Request',
+        errors: [i18n.t('lendBook.noLendBooks')],
+      });
+    }
+    const totalLendBooks = await this.lendBookModel.countDocuments({
       adminId: userId,
     });
-    if (!existingLendBooks) {
-      throw new NotFoundException({
-        statusCode: 400,
-        message: 'Bad Request',
-        errors: [i18n.t('lendBook.noLendBooks')],
-      });
-    }
-    return existingLendBooks;
+    const numOfPages = Math.ceil(totalLendBooks / limit);
+
+    return { data: existingLendBooks, totalItems: totalLendBooks, numOfPages };
   }
   async getReaderLendedBooks(
+    query,
     params,
     @I18n() i18n: I18nContext,
-  ): Promise<LendBook[]> {
+  ): Promise<{ data: LendBook[]; totalItems: number; numOfPages: number }> {
     const { id } = params;
-    const existingLendBooks = await this.lendBookModel.find({ readerId: id });
+    const { sortBy, sortDirection, pageSize, currentPage } = query;
+    const page = Number(currentPage) || 1;
+    const limit = Number(pageSize) || 10;
+    const skip = (page - 1) * limit;
+    const isAsc = sortDirection === 'asc' ? '' : '-';
+    const existingLendBooks = await this.lendBookModel
+      .find({ readerId: id })
+      .sort(isAsc + `${sortBy}`)
+      .skip(skip)
+      .limit(limit);
     if (!existingLendBooks) {
       throw new NotFoundException({
         statusCode: 400,
@@ -114,7 +142,16 @@ export class LendBookService {
         errors: [i18n.t('lendBook.noLendBooks')],
       });
     }
-    return existingLendBooks;
+    const totalReaderLendBooks = await this.readerModel.countDocuments({
+      readerId: id,
+    });
+    const numOfPages = Math.ceil(totalReaderLendBooks / limit);
+
+    return {
+      data: existingLendBooks,
+      totalItems: totalReaderLendBooks,
+      numOfPages,
+    };
   }
   async getSingleLendedBook(
     params,

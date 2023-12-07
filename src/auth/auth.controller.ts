@@ -1,13 +1,20 @@
 import {
   Body,
   Controller,
+  FileTypeValidator,
   Get,
+  MaxFileSizeValidator,
+  ParseFilePipe,
   Post,
   Put,
   Req,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { diskStorage } from 'multer';
 import { I18n, I18nContext } from 'nestjs-i18n';
 import { AuthGuardJwt } from './auth-guard.jwt';
 import { AuthService } from './auth.service';
@@ -78,5 +85,36 @@ export class AuthController {
     @Body() input: { refreshToken: string },
   ): Promise<{ accessToken: string }> {
     return this.authService.refreshToken(i18n, input);
+  }
+  @UseGuards(AuthGuardJwt)
+  @Post('me/uploadPhoto')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './uploads',
+        filename: (req, file, cb) => {
+          cb(null, `${file.originalname}`);
+        },
+      }),
+    }),
+  )
+  uploadAdminPhoto(
+    @I18n() i18n: I18nContext,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({
+            maxSize: 1048576,
+            message: 'validation.file.tooLarge',
+          }),
+          new FileTypeValidator({ fileType: '.(png|jpeg|jpg)' }),
+        ],
+        fileIsRequired: false,
+      }),
+    )
+    file: Express.Multer.File,
+    @Req() req: any,
+  ) {
+    return this.authService.uploadAdminPhoto(i18n, file, req);
   }
 }

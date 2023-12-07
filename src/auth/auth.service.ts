@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  InternalServerErrorException,
   Logger,
   NotFoundException,
   UnauthorizedException,
@@ -206,5 +207,44 @@ export class AuthService {
       { secret: process.env.JWT_SECRET, expiresIn: process.env.JWT_LIFETIME },
     );
     return { accessToken: newAccessToken };
+  }
+  async uploadAdminPhoto(i18n, file, req) {
+    const { userId } = req.user;
+    try {
+      const existingAdmin = await this.adminModel.findOne({ _id: userId });
+      if (!existingAdmin) {
+        throw new NotFoundException({
+          statusCode: 404,
+          message: 'Not Found',
+          errors: [i18n.t('book.bookNotFound')],
+        });
+      }
+      if (!file) {
+        throw new BadRequestException({
+          statusCode: 400,
+          message: 'Bad Request',
+          errors: [i18n.t('validation.file.noFileUploaded')],
+        });
+      }
+      if (!file.mimetype.startsWith('image')) {
+        throw new BadRequestException({
+          statusCode: 400,
+          message: 'Bad Request',
+          errors: [i18n.t('validation.file.badFormat')],
+        });
+      }
+      const filePath = `/uploads/${file.originalname}`;
+      await this.adminModel.updateOne({ _id: userId }, { photo: filePath });
+      return {
+        status: 201,
+        message: i18n.t('validation.file.fileUploadedSuccessfully'),
+      };
+    } catch (error) {
+      throw new InternalServerErrorException({
+        status: 500,
+        message: 'Internal Server Error',
+        errors: [i18n.t('validation.file.somethingWentWrong')],
+      });
+    }
   }
 }

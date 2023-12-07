@@ -7,6 +7,9 @@ import { AdminSchema } from 'src/admin/schemas/admin.schema';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt-strategy';
+import { MulterModule } from '@nestjs/platform-express';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -23,6 +26,14 @@ import { JwtStrategy } from './jwt-strategy';
       },
     }),
     MongooseModule.forFeature([{ name: 'Admin', schema: AdminSchema }]),
+    MulterModule.register({
+      dest: './uploads',
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', '../uploads'),
+      serveRoot: '/uploads/',
+      serveStaticOptions: { index: false },
+    }),
   ],
   providers: [AuthService, JwtService, JwtStrategy],
   controllers: [AuthController],

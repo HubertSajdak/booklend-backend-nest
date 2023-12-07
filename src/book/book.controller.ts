@@ -2,14 +2,22 @@ import {
   Body,
   Controller,
   Delete,
+  FileTypeValidator,
   Get,
+  MaxFileSizeValidator,
   Param,
+  ParseFilePipe,
   Post,
   Put,
+  Query,
   Req,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
+import { diskStorage } from 'multer';
 import { I18n, I18nContext } from 'nestjs-i18n';
 import { AuthGuardJwt } from 'src/auth/auth-guard.jwt';
 import { BookService } from './book.service';
@@ -40,8 +48,12 @@ export class BookController {
   }
   @UseGuards(AuthGuardJwt)
   @Get()
-  getAllBooks(@Req() req: any, @I18n() i18n: I18nContext): Promise<Book[]> {
-    return this.bookService.getAllBooks(req, i18n);
+  getAllBooks(
+    @Query() query: any,
+    @Req() req: any,
+    @I18n() i18n: I18nContext,
+  ): Promise<{ data: Book[]; totalItems: number; numOfPages: number }> {
+    return this.bookService.getAllBooks(query, req, i18n);
   }
   @UseGuards(AuthGuardJwt)
   @Put(':id')
@@ -59,5 +71,36 @@ export class BookController {
     @Param() params: any,
   ): Promise<{ message: string }> {
     return this.bookService.deleteBook(i18n, params);
+  }
+  @UseGuards(AuthGuardJwt)
+  @Post('uploadPhoto/:id')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './uploads',
+        filename: (req, file, cb) => {
+          cb(null, `${file.originalname}`);
+        },
+      }),
+    }),
+  )
+  uploadBookPhoto(
+    @I18n() i18n: I18nContext,
+    @Param() params: any,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({
+            maxSize: 1048576,
+            message: 'validation.file.tooLarge',
+          }),
+          new FileTypeValidator({ fileType: '.(png|jpeg|jpg)' }),
+        ],
+        fileIsRequired: false,
+      }),
+    )
+    file: Express.Multer.File,
+  ) {
+    return this.bookService.uploadBookPhoto(i18n, params, file);
   }
 }

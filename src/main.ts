@@ -6,7 +6,6 @@ import {
   I18nValidationPipe,
 } from 'nestjs-i18n';
 import { AppModule } from './app.module';
-
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(I18nMiddleware);

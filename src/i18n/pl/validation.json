@@ -45,5 +45,12 @@
     "requiredLendBookFrom": "Data wypożyczenia nie może być pusta",
     "requiredLendBookTo": "Data oddania nie może być pusta",
     "requiredLendStatus": "Status wypożyczenia jest wymagany"
+  },
+  "file": {
+    "noFileUploaded": "Brak załączonego pliku",
+    "tooLarge": "Rozmiar pliku jest zbyt duży",
+    "badFormat": "Zły format pliku",
+    "somethingWentWrong": "Coś poszło nie tak",
+    "fileUploadedSuccessfully": "Plik przesłano pomyślnie"
   }
 }

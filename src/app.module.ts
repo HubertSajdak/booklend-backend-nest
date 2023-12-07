@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { MulterModule } from '@nestjs/platform-express';
+import { ServeStaticModule } from '@nestjs/serve-static';
 import {
   AcceptLanguageResolver,
   CookieResolver,
@@ -14,9 +16,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { BookModule } from './book/book.module';
+import { LendBookModule } from './borrowed-book/lend-book.module';
 import { GenreModule } from './genre/genre.module';
 import { ReaderModule } from './reader/reader.module';
-import { LendBookModule } from './borrowed-book/lend-book.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -43,6 +45,13 @@ import { LendBookModule } from './borrowed-book/lend-book.module';
     GenreModule,
     ReaderModule,
     LendBookModule,
+    MulterModule.register({
+      dest: './uploads',
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: path.join(__dirname, '..', '../uploads'),
+      serveStaticOptions: { index: false },
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],

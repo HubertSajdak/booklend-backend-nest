@@ -42,5 +42,12 @@
     "requiredLendBookFrom": "Borrow date cannot be empty",
     "requiredLendBookTo": "Return date cannot be empty",
     "requiredLendStatus": "Lend status is required"
+  },
+  "file": {
+    "noFileUploaded": "No file uploaded",
+    "tooLarge": "File size is too large",
+    "badFormat": "Bad file format",
+    "somethingWentWrong": "Something went wrong",
+    "fileUploadedSuccessfully": "File uploaded successfully"
   }
 }

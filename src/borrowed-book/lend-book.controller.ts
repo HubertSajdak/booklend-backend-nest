@@ -5,6 +5,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -38,18 +39,20 @@ export class LendBookController {
   @UseGuards(AuthGuardJwt)
   @Get()
   getAllLendedBooks(
+    @Query() query: any,
     @Req() req: any,
     @I18n() i18n: I18nContext,
-  ): Promise<LendBook[]> {
-    return this.lendBookService.getAllLendedBooks(req, i18n);
+  ): Promise<{ data: LendBook[]; totalItems: number; numOfPages: number }> {
+    return this.lendBookService.getAllLendedBooks(query, req, i18n);
   }
   @UseGuards(AuthGuardJwt)
   @Get('reader/:id')
   getReaderLendedBooks(
+    @Query() query: any,
     @Param() params: any,
     @I18n() i18n: I18nContext,
-  ): Promise<LendBook[]> {
-    return this.lendBookService.getReaderLendedBooks(params, i18n);
+  ): Promise<{ data: LendBook[]; totalItems: number; numOfPages: number }> {
+    return this.lendBookService.getReaderLendedBooks(query, params, i18n);
   }
   @UseGuards(AuthGuardJwt)
   @Get(':id')
