@@ -29,6 +29,7 @@ async function bootstrap() {
       detailedErrors: false,
     }),
   );
+  app.enableCors();
   const config = new DocumentBuilder()
     .setTitle('BookLend example')
     .setDescription('BookLend description')
