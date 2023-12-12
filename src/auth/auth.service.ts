@@ -89,7 +89,7 @@ export class AuthService {
       },
       {
         secret: process.env.JWT_SECRET,
-        expiresIn: '15s',
+        expiresIn: process.env.JWT_LIFETIME,
       },
     );
     const refreshToken = this.jwtService.sign(
@@ -100,7 +100,7 @@ export class AuthService {
       },
       {
         secret: process.env.JWT_REFRESH_SECRET,
-        expiresIn: '60s',
+        expiresIn: process.env.JWT_REFRESH_LIFETIME,
       },
     );
     return {
