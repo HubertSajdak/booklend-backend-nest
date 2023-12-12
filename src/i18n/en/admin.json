@@ -6,5 +6,6 @@
   "invalidCredentials": "Invalid email or password",
   "welcome": "Welcome",
   "infoUpdated": "Information updated",
-  "passwordUpdated": "Password updated"
+  "passwordUpdated": "Password updated",
+  "adminNotFound": "Admin not found"
 }

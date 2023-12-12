@@ -6,5 +6,6 @@
   "invalidCredentials": "Nieprawidłowy email lub hasło",
   "welcome": "Witaj",
   "infoUpdated": "Informacje zaktualizowane",
-  "passwordUpdated": "Zaktualizowano hasło"
+  "passwordUpdated": "Zaktualizowano hasło",
+  "adminNotFound": "Nie znaleziono administratora"
 }

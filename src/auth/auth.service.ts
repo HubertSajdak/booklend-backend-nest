@@ -217,7 +217,7 @@ export class AuthService {
         throw new NotFoundException({
           statusCode: 404,
           message: 'Not Found',
-          errors: [i18n.t('book.bookNotFound')],
+          errors: [i18n.t('admin.adminNotFound')],
         });
       }
       if (!file) {

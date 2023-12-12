@@ -16,10 +16,17 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiHeader,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { diskStorage } from 'multer';
 import { I18n, I18nContext } from 'nestjs-i18n';
 import { AuthGuardJwt } from 'src/auth/auth-guard.jwt';
+import { SuccessResponse } from 'src/types/swagger-types';
 import { BookService } from './book.service';
 import { CreateBookDto } from './input/create-book.dto';
 import { UpdateBookDto } from './input/update-book.dto';
@@ -28,6 +35,15 @@ import { Book } from './schemas/book.schema';
 @Controller('books')
 export class BookController {
   constructor(private bookService: BookService) {}
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: 201,
+    description: 'Book created',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad object structure',
+  })
   @UseGuards(AuthGuardJwt)
   @Post()
   createBook(
@@ -37,7 +53,15 @@ export class BookController {
   ): Promise<{ message: string }> {
     return this.bookService.createBook(req, i18n, input);
   }
-
+  @ApiBearerAuth()
+  @ApiParam({
+    name: 'book id',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Book data',
+    type: CreateBookDto,
+  })
   @UseGuards(AuthGuardJwt)
   @Get(':id')
   getSingleBook(
@@ -46,6 +70,16 @@ export class BookController {
   ): Promise<Book> {
     return this.bookService.getSingleBook(i18n, params);
   }
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: 200,
+    description: 'Array of book data',
+    type: SuccessResponse,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Books not found',
+  })
   @UseGuards(AuthGuardJwt)
   @Get()
   getAllBooks(
@@ -55,6 +89,22 @@ export class BookController {
   ): Promise<{ data: Book[]; totalItems: number; numOfPages: number }> {
     return this.bookService.getAllBooks(query, req, i18n);
   }
+  @ApiBearerAuth()
+  @ApiParam({
+    name: 'book id',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Book updated',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad object structure',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Book not found',
+  })
   @UseGuards(AuthGuardJwt)
   @Put(':id')
   updateBook(
@@ -64,6 +114,18 @@ export class BookController {
   ): Promise<{ message: string }> {
     return this.bookService.updateBook(i18n, params, input);
   }
+  @ApiBearerAuth()
+  @ApiParam({
+    name: 'book id',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Book deleted',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Book not found',
+  })
   @UseGuards(AuthGuardJwt)
   @Delete(':id')
   deleteBook(
@@ -84,6 +146,29 @@ export class BookController {
       }),
     }),
   )
+  @ApiBearerAuth()
+  @ApiParam({
+    name: 'book id',
+  })
+  @ApiHeader({
+    name: 'Content-Type : multipart/form-data',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'File uploaded',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Object Structure',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Book not found',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal Server Error',
+  })
   uploadBookPhoto(
     @I18n() i18n: I18nContext,
     @Param() params: any,
