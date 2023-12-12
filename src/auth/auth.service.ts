@@ -81,7 +81,6 @@ export class AuthService {
         errors: [i18n.t('admin.invalidCredentials')],
       });
     }
-    Logger.log(process.env.JWT_LIFETIME);
     const accessToken = this.jwtService.sign(
       {
         userId: existingAdmin._id,
@@ -90,7 +89,7 @@ export class AuthService {
       },
       {
         secret: process.env.JWT_SECRET,
-        expiresIn: process.env.JWT_LIFETIME,
+        expiresIn: '15s',
       },
     );
     const refreshToken = this.jwtService.sign(
@@ -101,7 +100,7 @@ export class AuthService {
       },
       {
         secret: process.env.JWT_REFRESH_SECRET,
-        expiresIn: process.env.JWT_REFRESH_LIFETIME,
+        expiresIn: '60s',
       },
     );
     return {
@@ -205,7 +204,7 @@ export class AuthService {
         firstName: decoded.firstName,
         lastName: decoded.lastName,
       },
-      { secret: process.env.JWT_SECRET, expiresIn: process.env.JWT_LIFETIME },
+      { secret: process.env.JWT_SECRET, expiresIn: '15s' },
     );
     return { accessToken: newAccessToken };
   }
