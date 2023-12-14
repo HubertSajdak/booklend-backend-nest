@@ -62,6 +62,10 @@ export class CreateReaderDto {
     message: i18nValidationMessage('validation.lastName.requiredLastName'),
   })
   lastName: string;
+  @ApiProperty({
+    example: '123456789',
+    required: true,
+  })
   @MaxLength(9, {
     message: i18nValidationMessage('validation.phoneNumber.invalidNumber'),
   })
@@ -74,10 +78,22 @@ export class CreateReaderDto {
     ),
   })
   phoneNumber: string;
+  @ApiProperty({
+    example: {
+      street: 'Szczęśliwicka 1',
+      city: 'Warsaw',
+      postalCode: '00-001',
+    },
+    required: true,
+  })
   @ValidateNested({ each: true })
   @Type(() => AddressDto)
   address: AddressDto;
   @IsString()
   @IsOptional()
+  @ApiProperty({
+    example: 'uploads/doctor1.jpg',
+    required: false,
+  })
   photo?: string;
 }

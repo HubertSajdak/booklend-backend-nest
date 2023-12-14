@@ -20,6 +20,7 @@ import {
   ApiBearerAuth,
   ApiHeader,
   ApiParam,
+  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -79,6 +80,26 @@ export class BookController {
   @ApiResponse({
     status: 404,
     description: 'Books not found',
+  })
+  @ApiQuery({
+    name: 'search',
+    example: 'Wiedźmin',
+  })
+  @ApiQuery({
+    name: 'sortBy',
+    example: 'firstName',
+  })
+  @ApiQuery({
+    name: 'sortDirection',
+    example: 'asc | desc',
+  })
+  @ApiQuery({
+    name: 'pageSize',
+    example: 1,
+  })
+  @ApiQuery({
+    name: 'currentPage',
+    example: 1,
   })
   @UseGuards(AuthGuardJwt)
   @Get()
