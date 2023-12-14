@@ -187,26 +187,27 @@ export class AuthService {
         errors: [i18n.t('validation.common.badObject')],
       });
     }
-    const isValid = await this.jwtService.verify(input.refreshToken, {
-      secret: process.env.JWT_REFRESH_SECRET,
-    });
-    if (!isValid) {
+    try {
+      await this.jwtService.verify(input.refreshToken, {
+        secret: process.env.JWT_REFRESH_SECRET,
+      });
+      const decoded: any = this.jwtService.decode(input.refreshToken);
+      const newAccessToken = this.jwtService.sign(
+        {
+          userId: decoded.userId,
+          firstName: decoded.firstName,
+          lastName: decoded.lastName,
+        },
+        { secret: process.env.JWT_SECRET, expiresIn: '15s' },
+      );
+      return { accessToken: newAccessToken };
+    } catch (error) {
       throw new UnauthorizedException({
         statusCode: 401,
         message: 'Unauthorized',
         errors: [i18n.t('auth.sessionExpired')],
       });
     }
-    const decoded: any = this.jwtService.decode(input.refreshToken);
-    const newAccessToken = this.jwtService.sign(
-      {
-        userId: decoded.userId,
-        firstName: decoded.firstName,
-        lastName: decoded.lastName,
-      },
-      { secret: process.env.JWT_SECRET, expiresIn: '15s' },
-    );
-    return { accessToken: newAccessToken };
   }
   async uploadAdminPhoto(i18n, file, req) {
     const { userId } = req.user;
