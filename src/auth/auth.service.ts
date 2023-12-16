@@ -198,7 +198,7 @@ export class AuthService {
           firstName: decoded.firstName,
           lastName: decoded.lastName,
         },
-        { secret: process.env.JWT_SECRET, expiresIn: '15s' },
+        { secret: process.env.JWT_SECRET, expiresIn: process.env.JWT_LIFETIME },
       );
       return { accessToken: newAccessToken };
     } catch (error) {
