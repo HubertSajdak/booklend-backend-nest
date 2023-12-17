@@ -253,7 +253,6 @@ export class AuthService {
   async deleteAdminPhoto(i18n, req) {
     const { userId } = req.user;
     const existingAdmin = await this.adminModel.findOne({ _id: userId });
-    Logger.log('existingAdmin', existingAdmin);
     if (!existingAdmin.photo) {
       throw new UnprocessableEntityException({
         status: 400,
@@ -273,7 +272,6 @@ export class AuthService {
         errors: [i18n.t('validation.file.noFilesToRemove')],
       });
     }
-    Logger.log(pathName);
     fs.unlink(pathName, (err) => {
       if (err) {
         Logger.log(err);
