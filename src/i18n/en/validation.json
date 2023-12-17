@@ -48,6 +48,8 @@
     "tooLarge": "File size is too large",
     "badFormat": "Bad file format",
     "somethingWentWrong": "Something went wrong",
-    "fileUploadedSuccessfully": "File uploaded successfully"
+    "fileUploadedSuccessfully": "File uploaded successfully",
+    "fileURemovedSuccessfully": "File removed successfully",
+    "noFilesToRemove":"No files to remove"
   }
 }

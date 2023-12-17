@@ -5,18 +5,20 @@ import {
   Logger,
   NotFoundException,
   UnauthorizedException,
+  UnprocessableEntityException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
+import * as fs from 'fs';
 import { Model } from 'mongoose';
 import { I18n, I18nContext } from 'nestjs-i18n';
+import * as path from 'path';
 import { Admin } from 'src/admin/schemas/admin.schema';
 import { SignInAdminDto } from './input/signin-admin.dto';
 import { SignUpAdminDto } from './input/signup-admin.dto';
 import { UpdateAdminDto } from './input/update-admin.dto';
 import { UpdateAdminPasswordDto } from './input/updatePassword-admin.dto';
-
 @Injectable()
 export class AuthService {
   constructor(
@@ -247,5 +249,41 @@ export class AuthService {
         errors: [i18n.t('validation.file.somethingWentWrong')],
       });
     }
+  }
+  async deleteAdminPhoto(i18n, req) {
+    const { userId } = req.user;
+    const existingAdmin = await this.adminModel.findOne({ _id: userId });
+    Logger.log('existingAdmin', existingAdmin);
+    if (!existingAdmin.photo) {
+      throw new UnprocessableEntityException({
+        status: 400,
+        message: 'Bad Request',
+        errors: [i18n.t('validation.badObject')],
+      });
+    }
+    await this.adminModel.updateOne({ _id: userId }, { photo: null });
+    const pathName = path.join(
+      __dirname + '../../..' + `/uploads/${existingAdmin.photo.split('/')[2]}`,
+    );
+    const fileExists = fs.existsSync(pathName);
+    if (!fileExists) {
+      throw new BadRequestException({
+        status: 500,
+        message: 'Internal Server Error',
+        errors: [i18n.t('validation.file.noFilesToRemove')],
+      });
+    }
+    Logger.log(pathName);
+    fs.unlink(pathName, (err) => {
+      if (err) {
+        Logger.log(err);
+        throw new InternalServerErrorException({
+          status: 500,
+          message: 'Internal Server Error',
+          errors: [i18n.t('validation.file.somethingWentWrong')],
+        });
+      }
+    });
+    return { message: i18n.t('validation.file.fileRemovedSuccessfully') };
   }
 }

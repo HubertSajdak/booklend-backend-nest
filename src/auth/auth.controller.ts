@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   FileTypeValidator,
   Get,
   MaxFileSizeValidator,
@@ -172,5 +173,23 @@ export class AuthController {
     @Req() req: any,
   ) {
     return this.authService.uploadAdminPhoto(i18n, file, req);
+  }
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: 200,
+    description: 'File removed successfully',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Object Structure',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Could not find files to remove',
+  })
+  @UseGuards(AuthGuardJwt)
+  @Delete('me/removePhoto')
+  deleteAdminPhoto(@I18n() i18n: I18nContext, @Req() req: any) {
+    return this.authService.deleteAdminPhoto(i18n, req);
   }
 }

@@ -51,6 +51,8 @@
     "tooLarge": "Rozmiar pliku jest zbyt duży",
     "badFormat": "Zły format pliku",
     "somethingWentWrong": "Coś poszło nie tak",
-    "fileUploadedSuccessfully": "Plik przesłano pomyślnie"
+    "fileUploadedSuccessfully": "Plik przesłano pomyślnie",
+    "fileURemovedSuccessfully": "Usunięto plik",
+    "noFilesToRemove": "Brak plików do usunięcia"
   }
 }
