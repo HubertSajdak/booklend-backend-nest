@@ -7,5 +7,6 @@
   "welcome": "Welcome",
   "infoUpdated": "Information updated",
   "passwordUpdated": "Password updated",
-  "adminNotFound": "Admin not found"
+  "adminNotFound": "Admin not found",
+  "adminDeleted": "Administrator account has been deleted"
 }

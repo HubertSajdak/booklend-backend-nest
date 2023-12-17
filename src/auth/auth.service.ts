@@ -284,4 +284,20 @@ export class AuthService {
     });
     return { message: i18n.t('validation.file.fileRemovedSuccessfully') };
   }
+
+  async deleteAdmin(i18n, req) {
+    const { userId } = req.user;
+    const existingAdmin = await this.adminModel.findOne({
+      _id: userId,
+    });
+    if (!existingAdmin) {
+      throw new NotFoundException({
+        status: 404,
+        message: 'Not found',
+        errors: [i18n.t('admin.adminNotFound')],
+      });
+    }
+    await this.adminModel.deleteOne({ _id: userId });
+    return { message: i18n.t('admin.adminDeleted') };
+  }
 }

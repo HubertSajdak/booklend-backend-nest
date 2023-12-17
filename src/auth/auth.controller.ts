@@ -192,4 +192,18 @@ export class AuthController {
   deleteAdminPhoto(@I18n() i18n: I18nContext, @Req() req: any) {
     return this.authService.deleteAdminPhoto(i18n, req);
   }
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: 200,
+    description: 'Admin deleted',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Admin not found',
+  })
+  @UseGuards(AuthGuardJwt)
+  @Delete('me/removeAccount')
+  deleteAdministrator(@I18n() i18n: I18nContext, @Req() req: any) {
+    return this.authService.deleteAdmin(i18n, req);
+  }
 }
