@@ -253,14 +253,6 @@ export class AuthService {
   async deleteAdminPhoto(i18n, req) {
     const { userId } = req.user;
     const existingAdmin = await this.adminModel.findOne({ _id: userId });
-    if (!existingAdmin.photo) {
-      throw new UnprocessableEntityException({
-        status: 400,
-        message: 'Bad Request',
-        errors: [i18n.t('validation.badObject')],
-      });
-    }
-    await this.adminModel.updateOne({ _id: userId }, { photo: null });
     const pathName = path.join(
       __dirname + '../../..' + `/uploads/${existingAdmin.photo.split('/')[2]}`,
     );
@@ -272,6 +264,14 @@ export class AuthService {
         errors: [i18n.t('validation.file.noFilesToRemove')],
       });
     }
+    if (!existingAdmin.photo) {
+      throw new UnprocessableEntityException({
+        status: 400,
+        message: 'Bad Request',
+        errors: [i18n.t('validation.badObject')],
+      });
+    }
+    await this.adminModel.updateOne({ _id: userId }, { photo: null });
     fs.unlink(pathName, (err) => {
       if (err) {
         Logger.log(err);
