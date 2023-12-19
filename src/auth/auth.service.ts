@@ -264,13 +264,8 @@ export class AuthService {
     const pathName = path.join(
       __dirname,
       '..',
-      `../uploads/${existingAdmin.photo.split('/')[4]}`,
+      `../uploads/${existingAdmin.photo.split('/').pop()}`,
     );
-    Logger.log(existingAdmin.photo);
-    Logger.log(path.join(__dirname));
-    Logger.log(path.join(__dirname, '..'));
-    Logger.log(path.join(__dirname, '..', '..'));
-    Logger.log(pathName);
     // const fileExists = fs.existsSync(pathName);
     // Logger.log(fileExists);
     // if (!fileExists) {
