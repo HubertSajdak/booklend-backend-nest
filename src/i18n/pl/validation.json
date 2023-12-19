@@ -52,7 +52,7 @@
     "badFormat": "Zły format pliku",
     "somethingWentWrong": "Coś poszło nie tak",
     "fileUploadedSuccessfully": "Plik przesłano pomyślnie",
-    "fileURemovedSuccessfully": "Usunięto plik",
+    "fileRemovedSuccessfully": "Usunięto plik",
     "noFilesToRemove": "Brak plików do usunięcia"
   }
 }

@@ -253,6 +253,7 @@ export class AuthService {
   async deleteAdminPhoto(i18n, req) {
     const { userId } = req.user;
     const existingAdmin = await this.adminModel.findOne({ _id: userId });
+
     if (!existingAdmin.photo) {
       throw new UnprocessableEntityException({
         status: 400,
