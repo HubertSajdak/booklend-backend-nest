@@ -281,16 +281,16 @@ export class AuthService {
     //   });
     // }
     await this.adminModel.updateOne({ _id: userId }, { photo: null });
-    fs.unlink(pathName, (err) => {
-      if (err) {
-        Logger.log(err);
-        throw new InternalServerErrorException({
-          status: 500,
-          message: 'Internal Server Error',
-          errors: [i18n.t('validation.file.somethingWentWrong')],
-        });
-      }
-    });
+    // fs.unlink(pathName, (err) => {
+    //   if (err) {
+    //     Logger.log(err);
+    //     throw new InternalServerErrorException({
+    //       status: 500,
+    //       message: 'Internal Server Error',
+    //       errors: [i18n.t('validation.file.somethingWentWrong')],
+    //     });
+    //   }
+    // });
     return { message: i18n.t('validation.file.fileRemovedSuccessfully') };
   }
 
