@@ -266,6 +266,7 @@ export class AuthService {
       '..',
       `../uploads/${existingAdmin.photo.split('/')[2]}`,
     );
+    Logger.log(existingAdmin.photo);
     Logger.log(pathName);
     // const fileExists = fs.existsSync(pathName);
     // Logger.log(fileExists);
