@@ -49,7 +49,7 @@
     "badFormat": "Bad file format",
     "somethingWentWrong": "Something went wrong",
     "fileUploadedSuccessfully": "File uploaded successfully",
-    "fileURemovedSuccessfully": "File removed successfully",
+    "fileRemovedSuccessfully": "File removed successfully",
     "noFilesToRemove":"No files to remove"
   }
 }
