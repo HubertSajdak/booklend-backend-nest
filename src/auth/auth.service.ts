@@ -262,8 +262,11 @@ export class AuthService {
       });
     }
     const pathName = path.join(
-      __dirname + '../../..' + `/uploads/${existingAdmin.photo.split('/')[2]}`,
+      __dirname,
+      '..',
+      `../uploads/${existingAdmin.photo.split('/')[2]}`,
     );
+    Logger.log(pathName);
     // const fileExists = fs.existsSync(pathName);
     // Logger.log(fileExists);
     // if (!fileExists) {
