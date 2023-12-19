@@ -10,7 +10,6 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
-import * as fs from 'fs';
 import { Model } from 'mongoose';
 import { I18n, I18nContext } from 'nestjs-i18n';
 import * as path from 'path';
