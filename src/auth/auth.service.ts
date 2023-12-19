@@ -263,15 +263,15 @@ export class AuthService {
     const pathName = path.join(
       __dirname + '../../..' + `/uploads/${existingAdmin.photo.split('/')[2]}`,
     );
-    const fileExists = fs.existsSync(pathName);
-    Logger.log(fileExists);
-    if (!fileExists) {
-      throw new BadRequestException({
-        status: 500,
-        message: 'Internal Server Error',
-        errors: [i18n.t('validation.file.noFilesToRemove')],
-      });
-    }
+    // const fileExists = fs.existsSync(pathName);
+    // Logger.log(fileExists);
+    // if (!fileExists) {
+    //   throw new BadRequestException({
+    //     status: 500,
+    //     message: 'Internal Server Error',
+    //     errors: [i18n.t('validation.file.noFilesToRemove')],
+    //   });
+    // }
     await this.adminModel.updateOne({ _id: userId }, { photo: null });
     fs.unlink(pathName, (err) => {
       if (err) {
