@@ -29,7 +29,10 @@ async function bootstrap() {
       detailedErrors: false,
     }),
   );
-  app.enableCors();
+  app.enableCors({
+    origin: true,
+    credentials: true,
+  });
   const config = new DocumentBuilder()
     .setTitle('BookLend example')
     .setDescription('BookLend description')
