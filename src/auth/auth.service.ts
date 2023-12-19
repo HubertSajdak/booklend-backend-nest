@@ -10,6 +10,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
+import * as fs from 'fs';
 import { Model } from 'mongoose';
 import { I18n, I18nContext } from 'nestjs-i18n';
 import * as path from 'path';
@@ -263,7 +264,7 @@ export class AuthService {
     const pathName = path.join(
       __dirname,
       '..',
-      `../uploads/${existingAdmin.photo.split('/')[2]}`,
+      `../uploads/${existingAdmin.photo.split('/')[4]}`,
     );
     Logger.log(existingAdmin.photo);
     Logger.log(path.join(__dirname));
@@ -280,16 +281,16 @@ export class AuthService {
     //   });
     // }
     await this.adminModel.updateOne({ _id: userId }, { photo: null });
-    // fs.unlink(pathName, (err) => {
-    //   if (err) {
-    //     Logger.log(err);
-    //     throw new InternalServerErrorException({
-    //       status: 500,
-    //       message: 'Internal Server Error',
-    //       errors: [i18n.t('validation.file.somethingWentWrong')],
-    //     });
-    //   }
-    // });
+    fs.unlink(pathName, (err) => {
+      if (err) {
+        Logger.log(err);
+        throw new InternalServerErrorException({
+          status: 500,
+          message: 'Internal Server Error',
+          errors: [i18n.t('validation.file.somethingWentWrong')],
+        });
+      }
+    });
     return { message: i18n.t('validation.file.fileRemovedSuccessfully') };
   }
 
