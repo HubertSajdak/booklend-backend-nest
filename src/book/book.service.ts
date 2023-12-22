@@ -21,7 +21,7 @@ export class BookService {
     req,
     @I18n() i18n: I18nContext,
     input: CreateBookDto,
-  ): Promise<{ message: string }> {
+  ): Promise<{ message: string; bookId: string }> {
     const { userId } = req.user;
     const { title, description, rating, genre, author, numberOfPages } = input;
     if (
@@ -38,8 +38,11 @@ export class BookService {
         errors: [i18n.t('validation.common.badObject')],
       });
     }
-    await this.bookModel.create({ ...input, adminId: userId });
-    return { message: i18n.t('book.bookCreated') };
+    const createdBook = await this.bookModel.create({
+      ...input,
+      adminId: userId,
+    });
+    return { message: i18n.t('book.bookCreated'), bookId: createdBook.id };
   }
 
   async updateBook(
