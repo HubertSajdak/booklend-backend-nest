@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, MinLength } from 'class-validator';
-import mongoose from 'mongoose';
+import mongoose, { Decimal128 } from 'mongoose';
 import { i18nValidationMessage } from 'nestjs-i18n';
 
 export class CreateBookDto {
@@ -39,7 +39,7 @@ export class CreateBookDto {
   @IsNotEmpty({
     message: i18nValidationMessage('book.rating.requiredRating'),
   })
-  rating: number;
+  rating: Decimal128;
   @ApiProperty({
     example: 'sci-fi',
     required: true,

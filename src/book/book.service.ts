@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
@@ -112,26 +113,32 @@ export class BookService {
     @I18n() i18n: I18nContext,
   ): Promise<{ data: Book[]; totalItems: number; numOfPages: number }> {
     const { userId } = req.user;
-    const { search, sortBy, sortDirection, pageSize, currentPage } = query;
+    const { search, sortBy, sortDirection, pageSize, currentPage, genre } =
+      query;
     const page = Number(currentPage) || 1;
     const limit = Number(pageSize) || 10;
     const skip = (page - 1) * limit;
     const isAsc = sortDirection === 'asc' ? '' : '-';
+    Logger.log(genre);
+    const genreArr = genre.split('_');
     const existingBooks = await this.bookModel
-      .find(
-        search
-          ? {
-              adminId: userId,
-              $expr: {
-                $regexMatch: {
-                  input: { $concat: ['$title', ' ', '$author'] },
-                  regex: search,
-                  options: 'i',
-                },
-              },
-            }
-          : { adminId: userId },
-      )
+      .find({
+        adminId: userId,
+        ...(search && {
+          $expr: {
+            $regexMatch: {
+              input: { $concat: ['$title', ' ', '$author'] },
+              regex: search,
+              options: 'i',
+            },
+          },
+        }),
+        ...(genre && {
+          genre: {
+            $all: genreArr,
+          },
+        }),
+      })
       .sort(isAsc + `${sortBy}`)
       .skip(skip)
       .limit(limit);
@@ -143,20 +150,23 @@ export class BookService {
         errors: [i18n.t('book.booksNotFound')],
       });
     }
-    const totalBooks = await this.bookModel.countDocuments(
-      search
-        ? {
-            adminId: userId,
-            $expr: {
-              $regexMatch: {
-                input: { $concat: ['$title', ' ', '$author'] },
-                regex: search,
-                options: 'i',
-              },
-            },
-          }
-        : { adminId: userId },
-    );
+    const totalBooks = await this.bookModel.countDocuments({
+      adminId: userId,
+      ...(search && {
+        $expr: {
+          $regexMatch: {
+            input: { $concat: ['$title', ' ', '$author'] },
+            regex: search,
+            options: 'i',
+          },
+        },
+      }),
+      ...(genre && {
+        genre: {
+          $all: genreArr,
+        },
+      }),
+    });
     const numOfPages = Math.ceil(totalBooks / limit);
     return { data: existingBooks, totalItems: totalBooks, numOfPages };
   }
