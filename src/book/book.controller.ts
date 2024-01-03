@@ -27,6 +27,7 @@ import {
 import { diskStorage } from 'multer';
 import { I18n, I18nContext } from 'nestjs-i18n';
 import { AuthGuardJwt } from 'src/auth/auth-guard.jwt';
+import { JwtStrategy } from 'src/auth/jwt-strategy';
 import { SuccessResponse } from 'src/types/swagger-types';
 import { BookService } from './book.service';
 import { CreateBookDto } from './input/create-book.dto';
@@ -208,5 +209,10 @@ export class BookController {
     file: Express.Multer.File,
   ) {
     return this.bookService.uploadBookPhoto(i18n, params, file);
+  }
+  @UseGuards(JwtStrategy)
+  @Delete('deletePhoto/:id')
+  deleteBookPhoto(@I18n() i18n: I18nContext, @Param() params: any) {
+    return this.bookService.deleteBookPhoto(i18n, params);
   }
 }
