@@ -21,7 +21,7 @@ export class ReaderService {
     req,
     @I18n() i18n: I18nContext,
     input: CreateReaderDto,
-  ): Promise<{ message: string }> {
+  ): Promise<{ message: string; readerId: string }> {
     const { userId } = req.user;
     const { firstName, lastName, address, phoneNumber } = input;
     if (!firstName || !lastName || !address || !phoneNumber) {
@@ -31,8 +31,14 @@ export class ReaderService {
         errors: [i18n.t('validation.common.badObject')],
       });
     }
-    await this.readerModel.create({ ...input, adminId: userId });
-    return { message: i18n.t('reader.readerCreated') };
+    const createdReader = await this.readerModel.create({
+      ...input,
+      adminId: userId,
+    });
+    return {
+      message: i18n.t('reader.readerCreated'),
+      readerId: createdReader.id,
+    };
   }
   async updateReader(
     params,
@@ -100,20 +106,18 @@ export class ReaderService {
     const skip = (page - 1) * limit;
     const isAsc = sortDirection === 'asc' ? '' : '-';
     const existingReaders = await this.readerModel
-      .find(
-        search
-          ? {
-              adminId: userId,
-              $expr: {
-                $regexMatch: {
-                  input: { $concat: ['$firstName', ' ', '$lastName'] },
-                  regex: search,
-                  options: 'i',
-                },
-              },
-            }
-          : { adminId: userId },
-      )
+      .find({
+        adminId: userId,
+        ...(search && {
+          $expr: {
+            $regexMatch: {
+              input: { $concat: ['$firstName', ' ', '$lastName'] },
+              regex: search,
+              options: 'i',
+            },
+          },
+        }),
+      })
       .sort(isAsc + `${sortBy}`)
       .skip(skip)
       .limit(limit);
@@ -124,20 +128,18 @@ export class ReaderService {
         errors: [i18n.t('reader.readerNotFound')],
       });
     }
-    const totalReaders = await this.readerModel.countDocuments(
-      search
-        ? {
-            adminId: userId,
-            $expr: {
-              $regexMatch: {
-                input: { $concat: ['$firstName', ' ', '$lastName'] },
-                regex: search,
-                options: 'i',
-              },
-            },
-          }
-        : { adminId: userId },
-    );
+    const totalReaders = await this.readerModel.countDocuments({
+      adminId: userId,
+      ...(search && {
+        $expr: {
+          $regexMatch: {
+            input: { $concat: ['$firstName', ' ', '$lastName'] },
+            regex: search,
+            options: 'i',
+          },
+        },
+      }),
+    });
     const numOfPages = Math.ceil(totalReaders / limit);
 
     return { data: existingReaders, totalItems: totalReaders, numOfPages };
