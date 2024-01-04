@@ -108,15 +108,15 @@ export class ReaderService {
     const existingReaders = await this.readerModel
       .find({
         adminId: userId,
-        // ...(search && {
-        //   $expr: {
-        //     $regexMatch: {
-        //       input: { $concat: ['$firstName', ' ', '$lastName'] },
-        //       regex: search,
-        //       options: 'i',
-        //     },
-        //   },
-        // }),
+        ...(search && {
+          $expr: {
+            $regexMatch: {
+              input: { $concat: ['$firstName', ' ', '$lastName'] },
+              regex: search,
+              options: 'i',
+            },
+          },
+        }),
       })
       .sort(isAsc + `${sortBy}`)
       .skip(skip)
