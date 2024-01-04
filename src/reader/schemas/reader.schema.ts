@@ -6,6 +6,11 @@ import mongoose from 'mongoose';
 export class Reader {
   _id: mongoose.Types.ObjectId;
   @Prop({
+    type: mongoose.Types.ObjectId,
+    required: [true, 'required field'],
+  })
+  adminId: mongoose.Types.ObjectId;
+  @Prop({
     type: String,
     required: [true, 'required field'],
   })
