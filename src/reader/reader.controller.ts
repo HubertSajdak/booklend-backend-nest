@@ -141,7 +141,7 @@ export class ReaderController {
   updateReader(
     @Param() params: any,
     @I18n() i18n: I18nContext,
-    input: CreateReaderDto,
+    @Body(new ValidationPipe()) input: CreateReaderDto,
   ): Promise<{ message: string }> {
     return this.readerService.updateReader(params, i18n, input);
   }
