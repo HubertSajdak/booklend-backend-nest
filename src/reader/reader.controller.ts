@@ -219,4 +219,9 @@ export class ReaderController {
   ) {
     return this.readerService.uploadReaderPhoto(i18n, params, file);
   }
+  @UseGuards(AuthGuardJwt)
+  @Delete('deletePhoto/:id')
+  deleteReaderPhoto(@I18n() i18n: I18nContext, @Param() params: any) {
+    return this.readerService.deleteReaderPhoto(i18n, params);
+  }
 }

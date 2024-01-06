@@ -5,8 +5,10 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import * as fs from 'fs';
 import { Model } from 'mongoose';
 import { I18n, I18nContext } from 'nestjs-i18n';
+import * as path from 'path';
 import { CreateReaderDto } from './input/create-reader.dto';
 import { Reader } from './schemas/reader.schema';
 
@@ -182,5 +184,40 @@ export class ReaderService {
         errors: [i18n.t('validation.file.somethingWentWrong')],
       });
     }
+  }
+  async deleteReaderPhoto(i18n, params) {
+    const { id } = params;
+    const existingReader = await this.readerModel.findOne({ _id: id });
+    if (!existingReader) {
+      throw new NotFoundException({
+        status: 404,
+        message: 'Not found',
+        errors: [i18n.t('reader.readerNotFound')],
+      });
+    }
+    const pathName = path.join(
+      __dirname,
+      '..',
+      `../uploads/${existingReader.photo.split('/').pop()}`,
+    );
+    const fileExists = fs.existsSync(pathName);
+    if (!fileExists) {
+      throw new BadRequestException({
+        status: 500,
+        message: 'Internal Server Error',
+        errors: [i18n.t('validation.file.noFilesToRemove')],
+      });
+    }
+    await this.readerModel.updateOne({ _id: id }, { photo: null });
+    fs.unlink(pathName, (err) => {
+      if (err) {
+        throw new InternalServerErrorException({
+          status: 500,
+          message: 'Internal Server Error',
+          errors: [i18n.t('validation.file.somethingWentWrong')],
+        });
+      }
+    });
+    return { message: i18n.t('validation.file.fileRemovedSuccessfully') };
   }
 }
