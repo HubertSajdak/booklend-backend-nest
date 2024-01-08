@@ -164,6 +164,44 @@ export class LendBookController {
   }
   @ApiBearerAuth()
   @ApiParam({
+    name: 'reader id',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Array of lended books',
+    type: SuccessResponse,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'No lended books found',
+  })
+  @ApiQuery({
+    name: 'sortBy',
+    example: 'lendStatus',
+  })
+  @ApiQuery({
+    name: 'sortDirection',
+    example: 'asc | desc',
+  })
+  @ApiQuery({
+    name: 'pageSize',
+    example: 1,
+  })
+  @ApiQuery({
+    name: 'currentPage',
+    example: 1,
+  })
+  @UseGuards(AuthGuardJwt)
+  @Get('book/:id')
+  getBookLendHistory(
+    @Query() query: any,
+    @Param() params: any,
+    @I18n() i18n: I18nContext,
+  ): Promise<{ data: LendBook[]; totalItems: number; numOfPages: number }> {
+    return this.lendBookService.getBookLendHistory(query, params, i18n);
+  }
+  @ApiBearerAuth()
+  @ApiParam({
     name: 'lended book id',
   })
   @ApiResponse({

@@ -6,6 +6,7 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { I18n, I18nContext, i18nValidationMessage } from 'nestjs-i18n';
+import { Book } from 'src/book/schemas/book.schema';
 import { Reader } from 'src/reader/schemas/reader.schema';
 import { CreateLendBookDto } from './input/create-lend-book.dto';
 import { LendBook } from './schemas/lend-book.schema';
@@ -17,6 +18,8 @@ export class LendBookService {
     private readonly lendBookModel: Model<LendBook>,
     @InjectModel(Reader.name)
     private readonly readerModel: Model<Reader>,
+    @InjectModel(Book.name)
+    private readonly bookModel: Model<Book>,
   ) {}
   async createLendedBook(
     req,
@@ -40,6 +43,16 @@ export class LendBookService {
         errors: [i18n.t('reader.readerNotFound')],
       });
     }
+    const existingBook = await this.bookModel.findOne({
+      _id: bookId,
+    });
+    if (!existingBook) {
+      throw new NotFoundException({
+        status: 404,
+        message: 'Not found',
+        errors: [i18n.t('book.bookNotFound')],
+      });
+    }
     const existingLendedBook = await this.lendBookModel.findOne({ bookId });
     if (existingLendedBook && existingLendedBook.lendStatus === 'borrowed') {
       throw new BadRequestException({
@@ -51,6 +64,10 @@ export class LendBookService {
     await this.lendBookModel.create({
       ...input,
       adminId: userId,
+      readerData: existingReader,
+      bookData: existingBook,
+      lendFrom: new Date(lendFrom),
+      lendTo: new Date(lendTo),
     });
     return { message: i18n.t('lendBook.createLendBook') };
   }
@@ -84,7 +101,10 @@ export class LendBookService {
         errors: [i18n.t('lendBook.noLendBooks')],
       });
     }
-    await this.lendBookModel.updateOne({ _id: id }, { ...input });
+    await this.lendBookModel.updateOne(
+      { _id: id },
+      { ...input, lendFrom: new Date(lendFrom), lendTo: new Date(lendTo) },
+    );
     return { message: i18n.t('lendBook.updatedLendBook') };
   }
   async getAllLendedBooks(
@@ -93,7 +113,7 @@ export class LendBookService {
     @I18n() i18n: I18nContext,
   ): Promise<{ data: LendBook[]; totalItems: number; numOfPages: number }> {
     const { userId } = req.user;
-    const { sortBy, sortDirection, pageSize, currentPage } = query;
+    const { sortBy, sortDirection, pageSize, currentPage, lendStatus } = query;
     const page = Number(currentPage) || 1;
     const limit = Number(pageSize) || 10;
     const skip = (page - 1) * limit;
@@ -101,6 +121,10 @@ export class LendBookService {
     const existingLendBooks = await this.lendBookModel
       .find({
         adminId: userId,
+        ...(lendStatus &&
+          lendStatus !== 'all' && {
+            lendStatus,
+          }),
       })
       .sort(isAsc + `${sortBy}`)
       .skip(skip)
@@ -114,6 +138,10 @@ export class LendBookService {
     }
     const totalLendBooks = await this.lendBookModel.countDocuments({
       adminId: userId,
+      ...(lendStatus &&
+        lendStatus !== 'all' && {
+          lendStatus,
+        }),
     });
     const numOfPages = Math.ceil(totalLendBooks / limit);
 
@@ -125,13 +153,19 @@ export class LendBookService {
     @I18n() i18n: I18nContext,
   ): Promise<{ data: LendBook[]; totalItems: number; numOfPages: number }> {
     const { id } = params;
-    const { sortBy, sortDirection, pageSize, currentPage } = query;
+    const { sortBy, sortDirection, pageSize, currentPage, lendStatus } = query;
     const page = Number(currentPage) || 1;
     const limit = Number(pageSize) || 10;
     const skip = (page - 1) * limit;
     const isAsc = sortDirection === 'asc' ? '' : '-';
     const existingLendBooks = await this.lendBookModel
-      .find({ readerId: id })
+      .find({
+        readerId: id,
+        ...(lendStatus &&
+          lendStatus !== 'all' && {
+            lendStatus,
+          }),
+      })
       .sort(isAsc + `${sortBy}`)
       .skip(skip)
       .limit(limit);
@@ -142,8 +176,12 @@ export class LendBookService {
         errors: [i18n.t('lendBook.noLendBooks')],
       });
     }
-    const totalReaderLendBooks = await this.readerModel.countDocuments({
+    const totalReaderLendBooks = await this.lendBookModel.countDocuments({
       readerId: id,
+      ...(lendStatus &&
+        lendStatus !== 'all' && {
+          lendStatus,
+        }),
     });
     const numOfPages = Math.ceil(totalReaderLendBooks / limit);
 
@@ -153,6 +191,51 @@ export class LendBookService {
       numOfPages,
     };
   }
+  async getBookLendHistory(
+    query,
+    params,
+    @I18n() i18n: I18nContext,
+  ): Promise<{ data: LendBook[]; totalItems: number; numOfPages: number }> {
+    const { id } = params;
+    const { sortBy, sortDirection, pageSize, currentPage, lendStatus } = query;
+    const page = Number(currentPage) || 1;
+    const limit = Number(pageSize) || 10;
+    const skip = (page - 1) * limit;
+    const isAsc = sortDirection === 'asc' ? '' : '-';
+    const existingLendBooks = await this.lendBookModel
+      .find({
+        bookId: id,
+        ...(lendStatus &&
+          lendStatus !== 'all' && {
+            lendStatus,
+          }),
+      })
+      .sort(isAsc + `${sortBy}`)
+      .skip(skip)
+      .limit(limit);
+    if (!existingLendBooks) {
+      throw new NotFoundException({
+        statusCode: 400,
+        message: 'Bad Request',
+        errors: [i18n.t('lendBook.noLendBooks')],
+      });
+    }
+    const totalBookLendHistory = await this.lendBookModel.countDocuments({
+      bookId: id,
+      ...(lendStatus &&
+        lendStatus !== 'all' && {
+          lendStatus,
+        }),
+    });
+    const numOfPages = Math.ceil(totalBookLendHistory / limit);
+
+    return {
+      data: existingLendBooks,
+      totalItems: totalBookLendHistory,
+      numOfPages,
+    };
+  }
+
   async getSingleLendedBook(
     params,
     @I18n() i18n: I18nContext,

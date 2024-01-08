@@ -1,5 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose from 'mongoose';
+import mongoose, { Date } from 'mongoose';
+import { Book } from 'src/book/schemas/book.schema';
+import { Reader } from 'src/reader/schemas/reader.schema';
 
 @Schema({
   timestamps: true,
@@ -22,15 +24,15 @@ export class LendBook {
   })
   readerId: mongoose.Types.ObjectId;
   @Prop({
-    type: String,
+    type: Date,
     required: [true, 'required field'],
   })
-  lendFrom: string;
+  lendFrom: Date;
   @Prop({
-    type: String,
+    type: Date,
     required: [true, 'required field'],
   })
-  lendTo: string;
+  lendTo: Date;
   @Prop({
     type: String,
     enum: ['borrowed', 'available'],
@@ -38,6 +40,16 @@ export class LendBook {
     default: 'available',
   })
   lendStatus: string;
+  @Prop({
+    type: Reader,
+    required: [true, 'required field'],
+  })
+  readerData: Reader;
+  @Prop({
+    type: Book,
+    required: [true, 'required field'],
+  })
+  bookData: Book;
 }
 
 const LendBookSchema = SchemaFactory.createForClass(LendBook);

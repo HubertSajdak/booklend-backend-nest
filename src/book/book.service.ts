@@ -2,7 +2,6 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
-  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
@@ -121,7 +120,6 @@ export class BookService {
     const limit = Number(pageSize) || 10;
     const skip = (page - 1) * limit;
     const isAsc = sortDirection === 'asc' ? '' : '-';
-    Logger.log(genre);
     const genreArr = genre.split('_');
     const existingBooks = await this.bookModel
       .find({
