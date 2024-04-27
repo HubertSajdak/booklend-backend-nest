@@ -17,5 +17,6 @@ import { LendBookSchema } from './schemas/lend-book.schema';
   ],
   providers: [LendBookService],
   controllers: [LendBookController],
+  exports: [LendBookService],
 })
 export class LendBookModule {}
