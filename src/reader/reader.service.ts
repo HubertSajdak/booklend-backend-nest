@@ -11,12 +11,15 @@ import { I18n, I18nContext } from 'nestjs-i18n';
 import * as path from 'path';
 import { CreateReaderDto } from './input/create-reader.dto';
 import { Reader } from './schemas/reader.schema';
+import { LendBook } from '../borrowed-book/schemas/lend-book.schema';
 
 @Injectable()
 export class ReaderService {
   constructor(
     @InjectModel(Reader.name)
     private readonly readerModel: Model<Reader>,
+    @InjectModel(LendBook.name)
+    private readonly lendBookModel: Model<LendBook>,
   ) {}
 
   async createReader(
@@ -82,6 +85,7 @@ export class ReaderService {
       });
     }
     await this.readerModel.deleteOne({ _id: id });
+    await this.lendBookModel.updateMany({ readerId: id }, { lendStatus: "available",lendTo: new Date().toISOString() });
     return { message: i18n.t('reader.readerRemoved') };
   }
   async getSingleReader(params, @I18n() i18n: I18nContext): Promise<Reader> {

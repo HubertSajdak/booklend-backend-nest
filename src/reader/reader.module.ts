@@ -6,10 +6,15 @@ import { ReaderSchema } from './schemas/reader.schema';
 import { MulterModule } from '@nestjs/platform-express';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { LendBookModule } from "../borrowed-book/lend-book.module";
+import { LendBookSchema } from "../borrowed-book/schemas/lend-book.schema";
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: 'Reader', schema: ReaderSchema }]),
+    MongooseModule.forFeature([
+      { name: 'Reader', schema: ReaderSchema },
+      { name: 'LendBook', schema: LendBookSchema },
+    ]),
     MulterModule.register({
       dest: './uploads',
     }),
